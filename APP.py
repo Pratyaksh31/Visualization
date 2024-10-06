@@ -155,6 +155,3 @@ fig7.update_layout(width=1100, height=700)
 
 # Display the map chart in Streamlit
 st.plotly_chart(fig7)
-
-else:
-st.write("Please upload a CSV file to visualize the data.")
