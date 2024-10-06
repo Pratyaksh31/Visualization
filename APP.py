@@ -50,9 +50,6 @@ ax1.set_xlabel('Total Value (in USD)')
 ax1.set_ylabel('Country')
 ax1.grid(axis='x')  # Add gridlines for better readability
 
-# Display the first plot in Streamlit
-st.pyplot(fig1)
-
 # --------------------------- Second Chart: Product Category Pie Chart --------------------------- #
 st.subheader("Product Category Distribution")
 
@@ -67,9 +64,6 @@ category_distribution.plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palet
                            startangle=90, wedgeprops={'edgecolor': 'black'}, ax=ax2)
 ax2.set_title('Product Category Distribution')
 ax2.set_ylabel('')  # Remove y-label for aesthetics
-
-# Display the pie chart in Streamlit
-st.pyplot(fig2)
 
 # --------------------------- Third Chart: Total Import vs Export Value --------------------------- #
 st.subheader("Total Import vs Export Value")
@@ -92,9 +86,6 @@ fig3.gca().add_artist(centre_circle)
 ax3.set_title('Total Import vs Export Value')
 plt.axis('equal')
 
-# Display the Donut Chart in Streamlit
-st.pyplot(fig3)
-
 # --------------------------- Fourth Chart: Shipping Methods Bar Chart --------------------------- #
 st.subheader("Number of Transactions by Shipping Method")
 
@@ -112,9 +103,6 @@ ax4.set_ylabel('Number of Transactions')
 # Correct setting for ticks
 ax4.set_xticks(range(len(shipping_method_count.index)))  # Set the tick positions
 ax4.set_xticklabels(shipping_method_count.index, rotation=45)
-
-# Display the bar chart in Streamlit
-st.pyplot(fig4)
 
 # --------------------------- Fifth Chart: Payment Terms by Import/Export --------------------------- #
 st.subheader("Payment Terms Distribution by Import/Export")
@@ -137,9 +125,6 @@ ax5.set_xlabel('Import/Export', fontsize=12)
 ax5.set_xticks(range(len(stacked_data.index)))  # Set the tick positions
 ax5.set_xticklabels(stacked_data.index, rotation=0)
 
-# Display the stacked bar chart in Streamlit
-st.pyplot(fig5)
-
 # --------------------------- Sixth Chart: Average Transaction Value by Month --------------------------- #
 st.subheader("Average Value of Transactions by Month")
 
@@ -160,9 +145,6 @@ ax6.set_title('Average Value of Transactions by Month')
 ax6.set_xlabel('Month')
 ax6.set_ylabel('Average Transaction Value')
 ax6.grid(True)
-
-# Display the line chart in Streamlit
-st.pyplot(fig6)
 
 # --------------------------- Seventh Chart: Map for Total Import/Export Values by Country --------------------------- #
 st.subheader("Total Import and Export Values by Country")
@@ -188,6 +170,24 @@ fig7 = px.choropleth(country_values_pivot,
 
 # Update layout for larger size
 fig7.update_layout(width=1100, height=700)
+
+# --------------------------- Displaying Charts Side by Side --------------------------- #
+col1, col2 = st.columns(2)
+
+with col1:
+    st.pyplot(fig1)  # Display Top 10 Countries by Transaction Value
+    st.pyplot(fig2)  # Display Product Category Distribution
+
+with col2:
+    st.pyplot(fig3)  # Display Total Import vs Export Value
+    st.pyplot(fig4)  # Display Number of Transactions by Shipping Method
+
+# Display Stacked Bar Chart and Average Value of Transactions by Month in the next row
+st.subheader("Payment Terms Distribution by Import/Export")
+st.pyplot(fig5)
+
+st.subheader("Average Value of Transactions by Month")
+st.pyplot(fig6)
 
 # Display the map chart in Streamlit
 st.plotly_chart(fig7)
