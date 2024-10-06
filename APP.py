@@ -13,11 +13,18 @@ import_export = pd.read_csv(r"Imports_Exports_Dataset.csv")
 # Sample 3001 rows from the dataset
 my_data = import_export.sample(n=3001, replace=False, random_state=55031)
 
+# Slicer for Import/Export
+st.sidebar.subheader("Filter by Import/Export")
+import_export_filter = st.sidebar.selectbox("Select Import/Export", options=my_data['Import_Export'].unique())
+
+# Filter the data based on the selected option
+filtered_data = my_data[my_data['Import_Export'] == import_export_filter]
+
 # --------------------------- First Chart: Top 10 Countries by Transaction Value --------------------------- #
 st.subheader("Top 10 Countries by Transaction Value")
 
 # Group by Country and get the sum of 'Value' for the top 10 countries
-top_countries = import_export.groupby('Country')['Value'].sum().nlargest(10)
+top_countries = filtered_data.groupby('Country')['Value'].sum().nlargest(10)
 
 # Set up the plotting area using Matplotlib
 fig1, ax1 = plt.subplots(figsize=(7, 5))
@@ -39,7 +46,7 @@ st.subheader("Product Category Distribution")
 fig2, ax2 = plt.subplots(figsize=(7, 5))
 
 # Get category distribution
-category_distribution = my_data['Category'].value_counts()
+category_distribution = filtered_data['Category'].value_counts()
 
 # Plot the pie chart
 category_distribution.plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette('pastel'),
@@ -53,14 +60,11 @@ st.pyplot(fig2)
 # --------------------------- Third Chart: Total Import vs Export Value --------------------------- #
 st.subheader("Total Import vs Export Value")
 
-# Convert 'Date' column to datetime
-my_data['Date'] = pd.to_datetime(my_data['Date'], format='%d-%m-%Y')
-
 # Set up the plotting area for Donut Chart
 fig3, ax3 = plt.subplots(figsize=(7, 5))
 
 # Group by Import_Export and sum up the Value column
-import_export_value = my_data.groupby('Import_Export')['Value'].sum()
+import_export_value = filtered_data.groupby('Import_Export')['Value'].sum()
 
 # Create a pie chart
 ax3.pie(import_export_value, labels=import_export_value.index, autopct='%1.1f%%', startangle=90,
@@ -84,7 +88,7 @@ st.subheader("Number of Transactions by Shipping Method")
 fig4, ax4 = plt.subplots(figsize=(7, 5))
 
 # Count the number of transactions by shipping method
-shipping_method_count = my_data['Shipping_Method'].value_counts()
+shipping_method_count = filtered_data['Shipping_Method'].value_counts()
 
 # Plot the bar chart
 shipping_method_count.plot(kind='bar', color='purple', ax=ax4)
@@ -105,7 +109,7 @@ st.subheader("Payment Terms Distribution by Import/Export")
 fig5, ax5 = plt.subplots(figsize=(7, 5))
 
 # Group by Import_Export and Payment_Terms to get counts
-stacked_data = my_data.groupby(['Import_Export', 'Payment_Terms']).size().unstack()
+stacked_data = filtered_data.groupby(['Import_Export', 'Payment_Terms']).size().unstack()
 
 # Plot a stacked bar chart
 stacked_data.plot(kind='bar', stacked=True, color=sns.color_palette('Set2'), edgecolor='black', ax=ax5)
@@ -126,10 +130,10 @@ st.pyplot(fig5)
 st.subheader("Average Value of Transactions by Month")
 
 # Extract month from the date
-my_data['Month'] = my_data['Date'].dt.month
+filtered_data['Month'] = filtered_data['Date'].dt.month
 
 # Group by month and calculate the average transaction value
-monthly_avg_value = my_data.groupby('Month')['Value'].mean()
+monthly_avg_value = filtered_data.groupby('Month')['Value'].mean()
 
 # Set up the plotting area for line chart
 fig6, ax6 = plt.subplots(figsize=(7, 5))
@@ -150,7 +154,7 @@ st.pyplot(fig6)
 st.subheader("Total Import and Export Values by Country")
 
 # Group the data by country and import/export status
-country_values = my_data.groupby(['Country', 'Import_Export'])['Value'].sum().reset_index()
+country_values = filtered_data.groupby(['Country', 'Import_Export'])['Value'].sum().reset_index()
 
 # Pivot the data for plotting
 country_values_pivot = country_values.pivot(index='Country', columns='Import_Export', values='Value').fillna(0)
