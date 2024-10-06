@@ -83,16 +83,11 @@ stacked_data.plot(kind='bar', stacked=True, color=sns.color_palette('Set2'), edg
 ax5.set_title('Payment Terms Distribution by Import/Export', fontsize=14, fontweight='bold')
 ax5.set_ylabel('Number of Transactions', fontsize=12)
 ax5.set_xlabel('Import/Export', fontsize=12)
-ax5.set_xticks(rotation=0)
 
 # --------------------------- Sixth Chart: Average Transaction Value by Month --------------------------- #
-# Extract month from the date
+# Extract month from the date after converting to datetime
 filtered_data['Month'] = filtered_data['Date'].dt.month
-
-# Group by month and calculate the average transaction value
 monthly_avg_value = filtered_data.groupby('Month')['Value'].mean()
-
-# Set up the plotting area for line chart
 fig6, ax6 = plt.subplots(figsize=(7, 5))
 ax6.plot(monthly_avg_value.index, monthly_avg_value.values, marker='o', linestyle='-', color='b')
 ax6.set_title('Average Value of Transactions by Month')
@@ -100,48 +95,7 @@ ax6.set_xlabel('Month')
 ax6.set_ylabel('Average Transaction Value')
 ax6.grid(True)
 
-# --------------------------- Displaying Charts --------------------------- #
-# Create a layout for 2 columns for the first row
-col1, col2 = st.columns(2)
-
-# Plot 1: Top 10 Countries
-with col1:
-    st.subheader("Top 10 Countries by Transaction Value")
-    st.pyplot(fig1)  # Display Top 10 Countries by Transaction Value
-
-# Plot 2: Product Category Distribution
-with col2:
-    st.subheader("Product Category Distribution")
-    st.pyplot(fig2)  # Display Product Category Distribution
-
-# Create a layout for another 2 columns for the second row
-col3, col4 = st.columns(2)
-
-# Plot 3: Total Import vs Export Value
-with col3:
-    st.subheader("Total Import vs Export Value")
-    st.pyplot(fig3)  # Display Total Import vs Export Value
-
-# Plot 4: Shipping Methods Bar Chart
-with col4:
-    st.subheader("Number of Transactions by Shipping Method")
-    st.pyplot(fig4)  # Display Number of Transactions by Shipping Method
-
-# --------------------------- Display the Stacked Bar and Line Chart in a new row --------------------------- #
-col5, col6 = st.columns(2)
-
-# Plot 5: Payment Terms by Import/Export
-with col5:
-    st.subheader("Payment Terms Distribution by Import/Export")
-    st.pyplot(fig5)  # Display Payment Terms Distribution
-
-# Plot 6: Average Transaction Value by Month
-with col6:
-    st.subheader("Average Value of Transactions by Month")
-    st.pyplot(fig6)  # Display Average Transaction Value by Month
-
-# --------------------------- Display the Map Chart --------------------------- #
-st.subheader("Total Import and Export Values by Country")
+# --------------------------- Seventh Chart: Map for Total Import/Export Values by Country --------------------------- #
 country_values = filtered_data.groupby(['Country', 'Import_Export'])['Value'].sum().reset_index()
 country_values_pivot = country_values.pivot(index='Country', columns='Import_Export', values='Value').fillna(0)
 country_values_pivot['Total'] = country_values_pivot.sum(axis=1)
@@ -154,4 +108,44 @@ fig7 = px.choropleth(country_values_pivot,
                       color_continuous_scale=px.colors.sequential.Plasma,
                       labels={'Total': 'Total Value (in USD)'})
 fig7.update_layout(width=1100, height=700)
-st.plotly_chart(fig7)  # Display the map chart in Streamlit
+
+# --------------------------- Displaying Charts Side by Side --------------------------- #
+# Create a 4x2 grid for the plots (4 columns)
+col1, col2, col3, col4 = st.columns(4)
+
+# Plot 1
+with col1:
+    st.subheader("Top 10 Countries by Transaction Value")
+    st.pyplot(fig1)  # Display Top 10 Countries by Transaction Value
+
+# Plot 2
+with col2:
+    st.subheader("Product Category Distribution")
+    st.pyplot(fig2)  # Display Product Category Distribution
+
+# Plot 3
+with col3:
+    st.subheader("Total Import vs Export Value")
+    st.pyplot(fig3)  # Display Total Import vs Export Value
+
+# Plot 4
+with col4:
+    st.subheader("Number of Transactions by Shipping Method")
+    st.pyplot(fig4)  # Display Number of Transactions by Shipping Method
+
+# Second Row for remaining plots
+col5, col6 = st.columns(2)
+
+# Plot 5
+with col5:
+    st.subheader("Payment Terms Distribution by Import/Export")
+    st.pyplot(fig5)  # Display Payment Terms Distribution
+
+# Plot 6
+with col6:
+    st.subheader("Average Value of Transactions by Month")
+    st.pyplot(fig6)  # Display Average Value of Transactions by Month
+
+# Display the map chart in Streamlit
+st.subheader("Total Import and Export Values by Country")
+st.plotly_chart(fig7)
