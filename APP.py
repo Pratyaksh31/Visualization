@@ -5,6 +5,7 @@ import plotly.express as px
 import streamlit as st
 
 # Streamlit title and header
+st.set_page_config(layout="wide", page_title="Imports & Exports Dashboard")
 st.title("Data Visualization: Imports and Exports")
 
 # Load the dataset
@@ -14,7 +15,7 @@ import_export = pd.read_csv(r"Imports_Exports_Dataset.csv")
 my_data = import_export.sample(n=3001, replace=False, random_state=55031)
 
 # Sidebar filters
-st.sidebar.subheader("Filters")
+st.sidebar.header("Filters")
 
 # Multi-select slicer for Import/Export
 import_export_filter = st.sidebar.multiselect("Select Import/Export", options=my_data['Import_Export'].unique(), default=my_data['Import_Export'].unique())
@@ -34,119 +35,127 @@ filtered_data = my_data[(my_data['Import_Export'].isin(import_export_filter)) &
 # Convert 'Date' column to datetime for the filtered dataset
 filtered_data['Date'] = pd.to_datetime(filtered_data['Date'], format='%d-%m-%Y')
 
-# --------------------------- First Chart: Top 10 Countries by Transaction Value --------------------------- #
-# Group by Country and get the sum of 'Value' for the top 10 countries
+# --------------------- Chart 1: Top 10 Countries by Transaction Value --------------------- #
 top_countries = filtered_data.groupby('Country')['Value'].sum().nlargest(10)
+fig1 = px.bar(
+    top_countries,
+    x=top_countries.values,
+    y=top_countries.index,
+    orientation='h',
+    title='Top 10 Countries by Transaction Value',
+    labels={'x': 'Total Value (USD)', 'y': 'Country'},
+    color=top_countries.values,
+    color_continuous_scale=px.colors.sequential.Viridis
+)
+fig1.update_layout(height=400, title_x=0.5)
 
-# Set up the plotting area using Matplotlib with further increased size
-fig1, ax1 = plt.subplots(figsize=(14, 12))  # Further increased size
-top_countries.plot(kind='barh', color='green', ax=ax1)  # Horizontal bar chart
-ax1.set_title('Top 10 Countries by Transaction Value', fontsize=22)
-ax1.set_xlabel('Total Value (in USD)', fontsize=16)
-ax1.set_ylabel('Country', fontsize=16)
-ax1.grid(axis='x')  # Add gridlines for better readability
-
-# --------------------------- Second Chart: Product Category Pie Chart --------------------------- #
-# Set up the pie chart for product category distribution with further increased size
-fig2, ax2 = plt.subplots(figsize=(14, 12))  # Further increased size
+# --------------------- Chart 2: Product Category Distribution --------------------- #
 category_distribution = filtered_data['Category'].value_counts()
-category_distribution.plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette('pastel'),
-                           startangle=90, wedgeprops={'edgecolor': 'black'}, ax=ax2)
-ax2.set_title('Product Category Distribution', fontsize=22)
-ax2.set_ylabel('')  # Remove y-label for aesthetics
+fig2 = px.pie(
+    filtered_data, 
+    values=category_distribution.values, 
+    names=category_distribution.index, 
+    title='Product Category Distribution', 
+    color_discrete_sequence=px.colors.sequential.RdBu,
+    hole=0.4
+)
+fig2.update_layout(height=400, title_x=0.5)
 
-# --------------------------- Third Chart: Total Import vs Export Value --------------------------- #
-# Set up the plotting area for Donut Chart
-fig3, ax3 = plt.subplots(figsize=(7, 5))
+# --------------------- Chart 3: Total Import vs Export Value --------------------- #
 import_export_value = filtered_data.groupby('Import_Export')['Value'].sum()
-ax3.pie(import_export_value, labels=import_export_value.index, autopct='%1.1f%%', startangle=90,
-         colors=['#1f77b4', '#ff7f0e'])
-centre_circle = plt.Circle((0, 0), 0.70, color='white', fc='white')
-fig3.gca().add_artist(centre_circle)
-ax3.set_title('Total Import vs Export Value', fontsize=16)
-plt.axis('equal')
+fig3 = px.pie(
+    import_export_value, 
+    values=import_export_value.values, 
+    names=import_export_value.index, 
+    title='Total Import vs Export Value', 
+    color_discrete_sequence=px.colors.sequential.Plasma,
+    hole=0.6
+)
+fig3.update_layout(height=400, title_x=0.5)
 
-# --------------------------- Fourth Chart: Shipping Methods Bar Chart --------------------------- #
-# Set up the plotting area for Shipping Methods Bar Chart
-fig4, ax4 = plt.subplots(figsize=(12, 10))  # Significantly increased size
+# --------------------- Chart 4: Number of Transactions by Shipping Method --------------------- #
 shipping_method_count = filtered_data['Shipping_Method'].value_counts()
-shipping_method_count.plot(kind='bar', color='purple', ax=ax4)
-ax4.set_title('Number of Transactions by Shipping Method', fontsize=18)
-ax4.set_ylabel('Number of Transactions', fontsize=14)
-ax4.set_xticklabels(shipping_method_count.index, rotation=45)
+fig4 = px.bar(
+    shipping_method_count,
+    x=shipping_method_count.index,
+    y=shipping_method_count.values,
+    title='Number of Transactions by Shipping Method',
+    labels={'x': 'Shipping Method', 'y': 'Number of Transactions'},
+    color=shipping_method_count.values,
+    color_continuous_scale=px.colors.sequential.Tealgrn
+)
+fig4.update_layout(xaxis_tickangle=-45, height=400, title_x=0.5)
 
-# --------------------------- Fifth Chart: Payment Terms by Import/Export --------------------------- #
-# Set up the plotting area for Stacked Bar Chart
-fig5, ax5 = plt.subplots(figsize=(7, 5))
+# --------------------- Chart 5: Payment Terms by Import/Export --------------------- #
 stacked_data = filtered_data.groupby(['Import_Export', 'Payment_Terms']).size().unstack()
-stacked_data.plot(kind='bar', stacked=True, color=sns.color_palette('Set2'), edgecolor='black', ax=ax5)
-ax5.set_title('Payment Terms Distribution by Import/Export', fontsize=16)
-ax5.set_ylabel('Number of Transactions', fontsize=12)
-ax5.set_xlabel('Import/Export', fontsize=12)
+fig5 = px.bar(
+    stacked_data,
+    title='Payment Terms Distribution by Import/Export',
+    labels={'value': 'Number of Transactions'},
+    barmode='stack',
+    color_discrete_sequence=px.colors.sequential.Aggrnyl
+)
+fig5.update_layout(height=400, title_x=0.5)
 
-# --------------------------- Sixth Chart: Average Transaction Value by Month --------------------------- #
-# Extract month from the date after converting to datetime
+# --------------------- Chart 6: Average Transaction Value by Month --------------------- #
 filtered_data['Month'] = filtered_data['Date'].dt.month
 monthly_avg_value = filtered_data.groupby('Month')['Value'].mean()
-fig6, ax6 = plt.subplots(figsize=(7, 5))
-ax6.plot(monthly_avg_value.index, monthly_avg_value.values, marker='o', linestyle='-', color='b')
-ax6.set_title('Average Value of Transactions by Month', fontsize=16)
-ax6.set_xlabel('Month', fontsize=12)
-ax6.set_ylabel('Average Transaction Value', fontsize=12)
-ax6.grid(True)
+fig6 = px.line(
+    monthly_avg_value,
+    x=monthly_avg_value.index,
+    y=monthly_avg_value.values,
+    markers=True,
+    title='Average Value of Transactions by Month',
+    labels={'x': 'Month', 'y': 'Average Transaction Value (USD)'},
+    color_discrete_sequence=['#636EFA']
+)
+fig6.update_layout(height=400, title_x=0.5)
 
-# --------------------------- Seventh Chart: Map for Total Import/Export Values by Country --------------------------- #
+# --------------------- Chart 7: Total Import/Export Values by Country --------------------- #
 country_values = filtered_data.groupby(['Country', 'Import_Export'])['Value'].sum().reset_index()
 country_values_pivot = country_values.pivot(index='Country', columns='Import_Export', values='Value').fillna(0)
 country_values_pivot['Total'] = country_values_pivot.sum(axis=1)
-fig7 = px.choropleth(country_values_pivot,
-                      locations=country_values_pivot.index,
-                      locationmode='country names',
-                      color='Total',
-                      hover_name=country_values_pivot.index,
-                      title='Total Import and Export Values by Country',
-                      color_continuous_scale=px.colors.sequential.Plasma,
-                      labels={'Total': 'Total Value (in USD)'})
-fig7.update_layout(width=1100, height=700)
+fig7 = px.choropleth(
+    country_values_pivot,
+    locations=country_values_pivot.index,
+    locationmode='country names',
+    color='Total',
+    hover_name=country_values_pivot.index,
+    title='Total Import and Export Values by Country',
+    color_continuous_scale=px.colors.sequential.Plasma,
+    labels={'Total': 'Total Value (in USD)'}
+)
+fig7.update_layout(width=1200, height=700, title_x=0.5)
 
-# --------------------------- Displaying Charts --------------------------- #
-# First Row: Display first two charts side by side
+# --------------------- Displaying the Dashboard --------------------- #
+st.write("## Interactive Dashboard")
+
+# First row: Displaying two plots side by side
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Top 10 Countries by Transaction Value")
-    st.pyplot(fig1)  # Display Top 10 Countries by Transaction Value
+    st.plotly_chart(fig1, use_container_width=True)  # Top 10 Countries by Transaction Value
 
 with col2:
-    st.subheader("Product Category Distribution")
-    st.pyplot(fig2)  # Display Product Category Distribution
+    st.plotly_chart(fig2, use_container_width=True)  # Product Category Distribution
 
-# Second Row for remaining plots
+# Second row: Two more plots side by side
+col3, col4 = st.columns(2)
+
+with col3:
+    st.plotly_chart(fig3, use_container_width=True)  # Total Import vs Export Value
+
+with col4:
+    st.plotly_chart(fig4, use_container_width=True)  # Number of Transactions by Shipping Method
+
+# Third row: Stacked bar and line charts side by side
 col5, col6 = st.columns(2)
 
-# Plot 3
 with col5:
-    st.subheader("Total Import vs Export Value")
-    st.pyplot(fig3)  # Display Total Import vs Export Value
+    st.plotly_chart(fig5, use_container_width=True)  # Payment Terms Distribution
 
-# Plot 4
 with col6:
-    st.subheader("Number of Transactions by Shipping Method")
-    st.pyplot(fig4)  # Display Number of Transactions by Shipping Method
+    st.plotly_chart(fig6, use_container_width=True)  # Average Value of Transactions by Month
 
-# Third Row for remaining plots
-col7, col8 = st.columns(2)
-
-# Plot 5
-with col7:
-    st.subheader("Payment Terms Distribution by Import/Export")
-    st.pyplot(fig5)  # Display Payment Terms Distribution
-
-# Plot 6
-with col8:
-    st.subheader("Average Value of Transactions by Month")
-    st.pyplot(fig6)  # Display Average Value of Transactions by Month
-
-# Display the map chart in Streamlit
-st.subheader("Total Import and Export Values by Country")
-st.plotly_chart(fig7)  # Display the map chart in Streamlit
+# Final row: Full-width map
+st.plotly_chart(fig7, use_container_width=True)  # Map for Total Import/Export Values by Country
