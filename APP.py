@@ -41,7 +41,7 @@ category_distribution = my_data['Category'].value_counts()
 # Plot the pie chart
 category_distribution.plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette('pastel'),startangle=90, wedgeprops={'edgecolor': 'black'}, ax=ax2)
 ax2.set_title('Product Category Distribution')
- ax2.set_ylabel('')  # Remove y-label for aesthetics
+ax2.set_ylabel('')  # Remove y-label for aesthetics
 
 # Display the pie chart in Streamlit
 st.pyplot(fig2)
