@@ -38,21 +38,21 @@ filtered_data['Date'] = pd.to_datetime(filtered_data['Date'], format='%d-%m-%Y')
 # Group by Country and get the sum of 'Value' for the top 10 countries
 top_countries = filtered_data.groupby('Country')['Value'].sum().nlargest(10)
 
-# Set up the plotting area using Matplotlib with increased size
-fig1, ax1 = plt.subplots(figsize=(12, 10))  # Significantly increased size
+# Set up the plotting area using Matplotlib with further increased size
+fig1, ax1 = plt.subplots(figsize=(14, 12))  # Further increased size
 top_countries.plot(kind='barh', color='green', ax=ax1)  # Horizontal bar chart
-ax1.set_title('Top 10 Countries by Transaction Value', fontsize=18)
-ax1.set_xlabel('Total Value (in USD)', fontsize=14)
-ax1.set_ylabel('Country', fontsize=14)
+ax1.set_title('Top 10 Countries by Transaction Value', fontsize=22)
+ax1.set_xlabel('Total Value (in USD)', fontsize=16)
+ax1.set_ylabel('Country', fontsize=16)
 ax1.grid(axis='x')  # Add gridlines for better readability
 
 # --------------------------- Second Chart: Product Category Pie Chart --------------------------- #
-# Set up the pie chart for product category distribution with increased size
-fig2, ax2 = plt.subplots(figsize=(12, 10))  # Significantly increased size
+# Set up the pie chart for product category distribution with further increased size
+fig2, ax2 = plt.subplots(figsize=(14, 12))  # Further increased size
 category_distribution = filtered_data['Category'].value_counts()
 category_distribution.plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette('pastel'),
                            startangle=90, wedgeprops={'edgecolor': 'black'}, ax=ax2)
-ax2.set_title('Product Category Distribution', fontsize=18)
+ax2.set_title('Product Category Distribution', fontsize=22)
 ax2.set_ylabel('')  # Remove y-label for aesthetics
 
 # --------------------------- Third Chart: Total Import vs Export Value --------------------------- #
@@ -109,19 +109,13 @@ fig7 = px.choropleth(country_values_pivot,
                       labels={'Total': 'Total Value (in USD)'})
 fig7.update_layout(width=1100, height=700)
 
-# --------------------------- Displaying Charts Side by Side --------------------------- #
-# Create a 4x2 grid for the plots (4 columns)
-col1, col2, col3, col4 = st.columns(4)
+# --------------------------- Displaying Charts --------------------------- #
+# Display first two charts with increased width for better visibility
+st.subheader("Top 10 Countries by Transaction Value")
+st.pyplot(fig1)  # Display Top 10 Countries by Transaction Value
 
-# Plot 1
-with col1:
-    st.subheader("Top 10 Countries by Transaction Value")
-    st.pyplot(fig1)  # Display Top 10 Countries by Transaction Value
-
-# Plot 2
-with col2:
-    st.subheader("Product Category Distribution")
-    st.pyplot(fig2)  # Display Product Category Distribution
+st.subheader("Product Category Distribution")
+st.pyplot(fig2)  # Display Product Category Distribution
 
 # Second Row for remaining plots
 col5, col6 = st.columns(2)
