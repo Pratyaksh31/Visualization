@@ -123,29 +123,32 @@ with col2:
     st.subheader("Product Category Distribution")
     st.pyplot(fig2)  # Display Product Category Distribution
 
+# Second Row for remaining plots
+col5, col6 = st.columns(2)
+
 # Plot 3
-with col3:
+with col5:
     st.subheader("Total Import vs Export Value")
     st.pyplot(fig3)  # Display Total Import vs Export Value
 
 # Plot 4
-with col4:
+with col6:
     st.subheader("Number of Transactions by Shipping Method")
     st.pyplot(fig4)  # Display Number of Transactions by Shipping Method
 
-# Second Row for remaining plots
-col5, col6 = st.columns(2)
+# Third Row for remaining plots
+col7, col8 = st.columns(2)
 
 # Plot 5
-with col5:
+with col7:
     st.subheader("Payment Terms Distribution by Import/Export")
     st.pyplot(fig5)  # Display Payment Terms Distribution
 
 # Plot 6
-with col6:
+with col8:
     st.subheader("Average Value of Transactions by Month")
     st.pyplot(fig6)  # Display Average Value of Transactions by Month
 
 # Display the map chart in Streamlit
 st.subheader("Total Import and Export Values by Country")
-st.plotly_chart(fig7)
+st.plotly_chart(fig7)  # Display the map chart in Streamlit
