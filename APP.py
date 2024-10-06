@@ -6,13 +6,16 @@ import streamlit as st
 
 # Streamlit title and header
 st.title("Data Visualization: Imports and Exports")
-# File uploader for dataset input in Streamlit
+
 # Load the dataset
 import_export = pd.read_csv(r"Imports_Exports_Dataset.csv")
+
 # Sample 3001 rows from the dataset
 my_data = import_export.sample(n=3001, replace=False, random_state=55031)
+
 # --------------------------- First Chart: Top 10 Countries by Transaction Value --------------------------- #
 st.subheader("Top 10 Countries by Transaction Value")
+
 # Group by Country and get the sum of 'Value' for the top 10 countries
 top_countries = import_export.groupby('Country')['Value'].sum().nlargest(10)
 
@@ -39,7 +42,8 @@ fig2, ax2 = plt.subplots(figsize=(7, 5))
 category_distribution = my_data['Category'].value_counts()
 
 # Plot the pie chart
-category_distribution.plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette('pastel'),startangle=90, wedgeprops={'edgecolor': 'black'}, ax=ax2)
+category_distribution.plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette('pastel'),
+                           startangle=90, wedgeprops={'edgecolor': 'black'}, ax=ax2)
 ax2.set_title('Product Category Distribution')
 ax2.set_ylabel('')  # Remove y-label for aesthetics
 
@@ -59,7 +63,8 @@ fig3, ax3 = plt.subplots(figsize=(7, 5))
 import_export_value = my_data.groupby('Import_Export')['Value'].sum()
 
 # Create a pie chart
-ax3.pie(import_export_value, labels=import_export_value.index, autopct='%1.1f%%', startangle=90, colors=['#1f77b4', '#ff7f0e'])
+ax3.pie(import_export_value, labels=import_export_value.index, autopct='%1.1f%%', startangle=90,
+         colors=['#1f77b4', '#ff7f0e'])
 
 # Draw a white circle at the center of the pie chart to make it a donut chart
 centre_circle = plt.Circle((0, 0), 0.70, color='white', fc='white')
@@ -85,6 +90,9 @@ shipping_method_count = my_data['Shipping_Method'].value_counts()
 shipping_method_count.plot(kind='bar', color='purple', ax=ax4)
 ax4.set_title('Number of Transactions by Shipping Method')
 ax4.set_ylabel('Number of Transactions')
+
+# Correct setting for ticks
+ax4.set_xticks(range(len(shipping_method_count.index)))  # Set the tick positions
 ax4.set_xticklabels(shipping_method_count.index, rotation=45)
 
 # Display the bar chart in Streamlit
@@ -106,7 +114,10 @@ stacked_data.plot(kind='bar', stacked=True, color=sns.color_palette('Set2'), edg
 ax5.set_title('Payment Terms Distribution by Import/Export', fontsize=14, fontweight='bold')
 ax5.set_ylabel('Number of Transactions', fontsize=12)
 ax5.set_xlabel('Import/Export', fontsize=12)
-ax5.set_xticks(rotation=0)
+
+# Set tick labels correctly
+ax5.set_xticks(range(len(stacked_data.index)))  # Set the tick positions
+ax5.set_xticklabels(stacked_data.index, rotation=0)
 
 # Display the stacked bar chart in Streamlit
 st.pyplot(fig5)
@@ -148,7 +159,14 @@ country_values_pivot = country_values.pivot(index='Country', columns='Import_Exp
 country_values_pivot['Total'] = country_values_pivot.sum(axis=1)
 
 # Create a map chart using Plotly
-fig7 = px.choropleth(country_values_pivot,locations=country_values_pivot.index,locationmode='country names',color='Total',hover_name=country_values_pivot.index,title='Total Import and Export Values by Country',color_continuous_scale=px.colors.sequential.Plasma,labels={'Total': 'Total Value (in USD)'})
+fig7 = px.choropleth(country_values_pivot,
+                      locations=country_values_pivot.index,
+                      locationmode='country names',
+                      color='Total',
+                      hover_name=country_values_pivot.index,
+                      title='Total Import and Export Values by Country',
+                      color_continuous_scale=px.colors.sequential.Plasma,
+                      labels={'Total': 'Total Value (in USD)'})
 
 # Update layout for larger size
 fig7.update_layout(width=1100, height=700)
