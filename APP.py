@@ -39,20 +39,20 @@ filtered_data['Date'] = pd.to_datetime(filtered_data['Date'], format='%d-%m-%Y')
 top_countries = filtered_data.groupby('Country')['Value'].sum().nlargest(10)
 
 # Set up the plotting area using Matplotlib with increased size
-fig1, ax1 = plt.subplots(figsize=(9, 6))  # Increased size
+fig1, ax1 = plt.subplots(figsize=(10, 7))  # Increased size
 top_countries.plot(kind='barh', color='green', ax=ax1)  # Horizontal bar chart
-ax1.set_title('Top 10 Countries by Transaction Value')
-ax1.set_xlabel('Total Value (in USD)')
-ax1.set_ylabel('Country')
+ax1.set_title('Top 10 Countries by Transaction Value', fontsize=16)
+ax1.set_xlabel('Total Value (in USD)', fontsize=12)
+ax1.set_ylabel('Country', fontsize=12)
 ax1.grid(axis='x')  # Add gridlines for better readability
 
 # --------------------------- Second Chart: Product Category Pie Chart --------------------------- #
 # Set up the pie chart for product category distribution with increased size
-fig2, ax2 = plt.subplots(figsize=(9, 6))  # Increased size
+fig2, ax2 = plt.subplots(figsize=(10, 7))  # Increased size
 category_distribution = filtered_data['Category'].value_counts()
 category_distribution.plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette('pastel'),
                            startangle=90, wedgeprops={'edgecolor': 'black'}, ax=ax2)
-ax2.set_title('Product Category Distribution')
+ax2.set_title('Product Category Distribution', fontsize=16)
 ax2.set_ylabel('')  # Remove y-label for aesthetics
 
 # --------------------------- Third Chart: Total Import vs Export Value --------------------------- #
@@ -63,7 +63,7 @@ ax3.pie(import_export_value, labels=import_export_value.index, autopct='%1.1f%%'
          colors=['#1f77b4', '#ff7f0e'])
 centre_circle = plt.Circle((0, 0), 0.70, color='white', fc='white')
 fig3.gca().add_artist(centre_circle)
-ax3.set_title('Total Import vs Export Value')
+ax3.set_title('Total Import vs Export Value', fontsize=16)
 plt.axis('equal')
 
 # --------------------------- Fourth Chart: Shipping Methods Bar Chart --------------------------- #
@@ -71,8 +71,8 @@ plt.axis('equal')
 fig4, ax4 = plt.subplots(figsize=(7, 5))
 shipping_method_count = filtered_data['Shipping_Method'].value_counts()
 shipping_method_count.plot(kind='bar', color='purple', ax=ax4)
-ax4.set_title('Number of Transactions by Shipping Method')
-ax4.set_ylabel('Number of Transactions')
+ax4.set_title('Number of Transactions by Shipping Method', fontsize=16)
+ax4.set_ylabel('Number of Transactions', fontsize=12)
 ax4.set_xticklabels(shipping_method_count.index, rotation=45)
 
 # --------------------------- Fifth Chart: Payment Terms by Import/Export --------------------------- #
@@ -80,7 +80,7 @@ ax4.set_xticklabels(shipping_method_count.index, rotation=45)
 fig5, ax5 = plt.subplots(figsize=(7, 5))
 stacked_data = filtered_data.groupby(['Import_Export', 'Payment_Terms']).size().unstack()
 stacked_data.plot(kind='bar', stacked=True, color=sns.color_palette('Set2'), edgecolor='black', ax=ax5)
-ax5.set_title('Payment Terms Distribution by Import/Export', fontsize=14, fontweight='bold')
+ax5.set_title('Payment Terms Distribution by Import/Export', fontsize=16)
 ax5.set_ylabel('Number of Transactions', fontsize=12)
 ax5.set_xlabel('Import/Export', fontsize=12)
 
@@ -90,9 +90,9 @@ filtered_data['Month'] = filtered_data['Date'].dt.month
 monthly_avg_value = filtered_data.groupby('Month')['Value'].mean()
 fig6, ax6 = plt.subplots(figsize=(7, 5))
 ax6.plot(monthly_avg_value.index, monthly_avg_value.values, marker='o', linestyle='-', color='b')
-ax6.set_title('Average Value of Transactions by Month')
-ax6.set_xlabel('Month')
-ax6.set_ylabel('Average Transaction Value')
+ax6.set_title('Average Value of Transactions by Month', fontsize=16)
+ax6.set_xlabel('Month', fontsize=12)
+ax6.set_ylabel('Average Transaction Value', fontsize=12)
 ax6.grid(True)
 
 # --------------------------- Seventh Chart: Map for Total Import/Export Values by Country --------------------------- #
