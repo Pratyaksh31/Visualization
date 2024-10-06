@@ -16,19 +16,19 @@ my_data = import_export.sample(n=3001, replace=False, random_state=55031)
 # Sidebar filters
 st.sidebar.subheader("Filters")
 
-# Slicer for Import/Export
-import_export_filter = st.sidebar.selectbox("Select Import/Export", options=my_data['Import_Export'].unique())
+# Multi-select slicer for Import/Export
+import_export_filter = st.sidebar.multiselect("Select Import/Export", options=my_data['Import_Export'].unique(), default=my_data['Import_Export'].unique())
 
-# Slicer for Category
+# Multi-select slicer for Category
 category_filter = st.sidebar.multiselect("Select Category", options=my_data['Category'].unique(), default=my_data['Category'].unique())
 
 # Button to reset filters
 if st.sidebar.button("Reset Filters"):
-    import_export_filter = my_data['Import_Export'].unique()[0]
+    import_export_filter = my_data['Import_Export'].unique()
     category_filter = my_data['Category'].unique()
 
 # Filter the data based on the selected options
-filtered_data = my_data[(my_data['Import_Export'] == import_export_filter) & 
+filtered_data = my_data[(my_data['Import_Export'].isin(import_export_filter)) & 
                         (my_data['Category'].isin(category_filter))]
 
 # Convert 'Date' column to datetime for the filtered dataset
