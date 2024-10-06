@@ -39,20 +39,20 @@ filtered_data['Date'] = pd.to_datetime(filtered_data['Date'], format='%d-%m-%Y')
 top_countries = filtered_data.groupby('Country')['Value'].sum().nlargest(10)
 
 # Set up the plotting area using Matplotlib with increased size
-fig1, ax1 = plt.subplots(figsize=(10, 8))  # Increased size
+fig1, ax1 = plt.subplots(figsize=(12, 10))  # Significantly increased size
 top_countries.plot(kind='barh', color='green', ax=ax1)  # Horizontal bar chart
-ax1.set_title('Top 10 Countries by Transaction Value', fontsize=16)
-ax1.set_xlabel('Total Value (in USD)', fontsize=12)
-ax1.set_ylabel('Country', fontsize=12)
+ax1.set_title('Top 10 Countries by Transaction Value', fontsize=18)
+ax1.set_xlabel('Total Value (in USD)', fontsize=14)
+ax1.set_ylabel('Country', fontsize=14)
 ax1.grid(axis='x')  # Add gridlines for better readability
 
 # --------------------------- Second Chart: Product Category Pie Chart --------------------------- #
 # Set up the pie chart for product category distribution with increased size
-fig2, ax2 = plt.subplots(figsize=(10, 8))  # Increased size
+fig2, ax2 = plt.subplots(figsize=(12, 10))  # Significantly increased size
 category_distribution = filtered_data['Category'].value_counts()
 category_distribution.plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette('pastel'),
                            startangle=90, wedgeprops={'edgecolor': 'black'}, ax=ax2)
-ax2.set_title('Product Category Distribution', fontsize=16)
+ax2.set_title('Product Category Distribution', fontsize=18)
 ax2.set_ylabel('')  # Remove y-label for aesthetics
 
 # --------------------------- Third Chart: Total Import vs Export Value --------------------------- #
@@ -68,11 +68,11 @@ plt.axis('equal')
 
 # --------------------------- Fourth Chart: Shipping Methods Bar Chart --------------------------- #
 # Set up the plotting area for Shipping Methods Bar Chart
-fig4, ax4 = plt.subplots(figsize=(10, 8))  # Increased size to match others
+fig4, ax4 = plt.subplots(figsize=(12, 10))  # Significantly increased size
 shipping_method_count = filtered_data['Shipping_Method'].value_counts()
 shipping_method_count.plot(kind='bar', color='purple', ax=ax4)
-ax4.set_title('Number of Transactions by Shipping Method', fontsize=16)
-ax4.set_ylabel('Number of Transactions', fontsize=12)
+ax4.set_title('Number of Transactions by Shipping Method', fontsize=18)
+ax4.set_ylabel('Number of Transactions', fontsize=14)
 ax4.set_xticklabels(shipping_method_count.index, rotation=45)
 
 # --------------------------- Fifth Chart: Payment Terms by Import/Export --------------------------- #
