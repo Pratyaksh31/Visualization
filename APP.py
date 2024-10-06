@@ -20,6 +20,9 @@ import_export_filter = st.sidebar.selectbox("Select Import/Export", options=my_d
 # Filter the data based on the selected option
 filtered_data = my_data[my_data['Import_Export'] == import_export_filter]
 
+# Convert 'Date' column to datetime for the filtered dataset
+filtered_data['Date'] = pd.to_datetime(filtered_data['Date'], format='%d-%m-%Y')
+
 # --------------------------- First Chart: Top 10 Countries by Transaction Value --------------------------- #
 st.subheader("Top 10 Countries by Transaction Value")
 
@@ -129,7 +132,7 @@ st.pyplot(fig5)
 # --------------------------- Sixth Chart: Average Transaction Value by Month --------------------------- #
 st.subheader("Average Value of Transactions by Month")
 
-# Extract month from the date
+# Extract month from the date after converting to datetime
 filtered_data['Month'] = filtered_data['Date'].dt.month
 
 # Group by month and calculate the average transaction value
