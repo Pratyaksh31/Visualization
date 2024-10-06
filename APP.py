@@ -38,8 +38,8 @@ filtered_data['Date'] = pd.to_datetime(filtered_data['Date'], format='%d-%m-%Y')
 # Group by Country and get the sum of 'Value' for the top 10 countries
 top_countries = filtered_data.groupby('Country')['Value'].sum().nlargest(10)
 
-# Set up the plotting area using Matplotlib
-fig1, ax1 = plt.subplots(figsize=(7, 5))
+# Set up the plotting area using Matplotlib with increased size
+fig1, ax1 = plt.subplots(figsize=(9, 6))  # Increased size
 top_countries.plot(kind='barh', color='green', ax=ax1)  # Horizontal bar chart
 ax1.set_title('Top 10 Countries by Transaction Value')
 ax1.set_xlabel('Total Value (in USD)')
@@ -47,8 +47,8 @@ ax1.set_ylabel('Country')
 ax1.grid(axis='x')  # Add gridlines for better readability
 
 # --------------------------- Second Chart: Product Category Pie Chart --------------------------- #
-# Set up the pie chart for product category distribution
-fig2, ax2 = plt.subplots(figsize=(7, 5))
+# Set up the pie chart for product category distribution with increased size
+fig2, ax2 = plt.subplots(figsize=(9, 6))  # Increased size
 category_distribution = filtered_data['Category'].value_counts()
 category_distribution.plot(kind='pie', autopct='%1.1f%%', colors=sns.color_palette('pastel'),
                            startangle=90, wedgeprops={'edgecolor': 'black'}, ax=ax2)
