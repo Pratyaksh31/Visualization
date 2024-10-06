@@ -110,12 +110,16 @@ fig7 = px.choropleth(country_values_pivot,
 fig7.update_layout(width=1100, height=700)
 
 # --------------------------- Displaying Charts --------------------------- #
-# Display first two charts with increased width for better visibility
-st.subheader("Top 10 Countries by Transaction Value")
-st.pyplot(fig1)  # Display Top 10 Countries by Transaction Value
+# First Row: Display first two charts side by side
+col1, col2 = st.columns(2)
 
-st.subheader("Product Category Distribution")
-st.pyplot(fig2)  # Display Product Category Distribution
+with col1:
+    st.subheader("Top 10 Countries by Transaction Value")
+    st.pyplot(fig1)  # Display Top 10 Countries by Transaction Value
+
+with col2:
+    st.subheader("Product Category Distribution")
+    st.pyplot(fig2)  # Display Product Category Distribution
 
 # Second Row for remaining plots
 col5, col6 = st.columns(2)
