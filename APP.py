@@ -75,7 +75,32 @@ ax4.set_title('Number of Transactions by Shipping Method')
 ax4.set_ylabel('Number of Transactions')
 ax4.set_xticklabels(shipping_method_count.index, rotation=45)
 
-# --------------------------- Displaying Charts Side by Side --------------------------- #
+# --------------------------- Fifth Chart: Payment Terms by Import/Export --------------------------- #
+# Set up the plotting area for Stacked Bar Chart
+fig5, ax5 = plt.subplots(figsize=(7, 5))
+stacked_data = filtered_data.groupby(['Import_Export', 'Payment_Terms']).size().unstack()
+stacked_data.plot(kind='bar', stacked=True, color=sns.color_palette('Set2'), edgecolor='black', ax=ax5)
+ax5.set_title('Payment Terms Distribution by Import/Export', fontsize=14, fontweight='bold')
+ax5.set_ylabel('Number of Transactions', fontsize=12)
+ax5.set_xlabel('Import/Export', fontsize=12)
+ax5.set_xticks(rotation=0)
+
+# --------------------------- Sixth Chart: Average Transaction Value by Month --------------------------- #
+# Extract month from the date
+filtered_data['Month'] = filtered_data['Date'].dt.month
+
+# Group by month and calculate the average transaction value
+monthly_avg_value = filtered_data.groupby('Month')['Value'].mean()
+
+# Set up the plotting area for line chart
+fig6, ax6 = plt.subplots(figsize=(7, 5))
+ax6.plot(monthly_avg_value.index, monthly_avg_value.values, marker='o', linestyle='-', color='b')
+ax6.set_title('Average Value of Transactions by Month')
+ax6.set_xlabel('Month')
+ax6.set_ylabel('Average Transaction Value')
+ax6.grid(True)
+
+# --------------------------- Displaying Charts --------------------------- #
 # Create a layout for 2 columns for the first row
 col1, col2 = st.columns(2)
 
@@ -101,6 +126,19 @@ with col3:
 with col4:
     st.subheader("Number of Transactions by Shipping Method")
     st.pyplot(fig4)  # Display Number of Transactions by Shipping Method
+
+# --------------------------- Display the Stacked Bar and Line Chart in a new row --------------------------- #
+col5, col6 = st.columns(2)
+
+# Plot 5: Payment Terms by Import/Export
+with col5:
+    st.subheader("Payment Terms Distribution by Import/Export")
+    st.pyplot(fig5)  # Display Payment Terms Distribution
+
+# Plot 6: Average Transaction Value by Month
+with col6:
+    st.subheader("Average Value of Transactions by Month")
+    st.pyplot(fig6)  # Display Average Transaction Value by Month
 
 # --------------------------- Display the Map Chart --------------------------- #
 st.subheader("Total Import and Export Values by Country")
