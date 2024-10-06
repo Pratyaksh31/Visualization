@@ -47,7 +47,7 @@ fig1 = px.bar(
     color=top_countries.values,
     color_continuous_scale=px.colors.sequential.Viridis
 )
-fig1.update_layout(height=400, title_x=0.5)
+fig1.update_layout(height=400, title_x=0.5)  # Center-align title
 
 # --------------------- Chart 2: Product Category Distribution --------------------- #
 category_distribution = filtered_data['Category'].value_counts()
@@ -59,7 +59,7 @@ fig2 = px.pie(
     color_discrete_sequence=px.colors.sequential.RdBu,
     hole=0.4
 )
-fig2.update_layout(height=400, title_x=0.5)
+fig2.update_layout(height=400, title_x=0.5)  # Center-align title
 
 # --------------------- Chart 3: Total Import vs Export Value --------------------- #
 import_export_value = filtered_data.groupby('Import_Export')['Value'].sum()
@@ -71,7 +71,7 @@ fig3 = px.pie(
     color_discrete_sequence=px.colors.sequential.Plasma,
     hole=0.6
 )
-fig3.update_layout(height=400, title_x=0.5)
+fig3.update_layout(height=400, title_x=0.5)  # Center-align title
 
 # --------------------- Chart 4: Number of Transactions by Shipping Method --------------------- #
 shipping_method_count = filtered_data['Shipping_Method'].value_counts()
@@ -84,7 +84,7 @@ fig4 = px.bar(
     color=shipping_method_count.values,
     color_continuous_scale=px.colors.sequential.Tealgrn
 )
-fig4.update_layout(xaxis_tickangle=-45, height=400, title_x=0.5)
+fig4.update_layout(xaxis_tickangle=-45, height=400, title_x=0.5)  # Center-align title
 
 # --------------------- Chart 5: Payment Terms by Import/Export --------------------- #
 stacked_data = filtered_data.groupby(['Import_Export', 'Payment_Terms']).size().unstack()
@@ -95,7 +95,7 @@ fig5 = px.bar(
     barmode='stack',
     color_discrete_sequence=px.colors.sequential.Aggrnyl
 )
-fig5.update_layout(height=400, title_x=0.5)
+fig5.update_layout(height=400, title_x=0.5)  # Center-align title
 
 # --------------------- Chart 6: Average Transaction Value by Month --------------------- #
 filtered_data['Month'] = filtered_data['Date'].dt.month
@@ -109,7 +109,7 @@ fig6 = px.line(
     labels={'x': 'Month', 'y': 'Average Transaction Value (USD)'},
     color_discrete_sequence=['#636EFA']
 )
-fig6.update_layout(height=400, title_x=0.5)
+fig6.update_layout(height=400, title_x=0.5)  # Center-align title
 
 # --------------------- Chart 7: Total Import/Export Values by Country --------------------- #
 country_values = filtered_data.groupby(['Country', 'Import_Export'])['Value'].sum().reset_index()
@@ -125,7 +125,7 @@ fig7 = px.choropleth(
     color_continuous_scale=px.colors.sequential.Plasma,
     labels={'Total': 'Total Value (in USD)'}
 )
-fig7.update_layout(width=1200, height=700, title_x=0.5)
+fig7.update_layout(width=1200, height=700, title_x=0.5)  # Center-align title
 
 # --------------------- Displaying the Dashboard --------------------- #
 st.write("## Interactive Dashboard")
